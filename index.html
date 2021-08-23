@@ -24,7 +24,7 @@
 			background-color: red;
 			position: absolute;
 			margin: 10% 35%;
-			display: none;
+			/*display: none;*/
 		}
 		#formid{
 			padding-left:40%;
@@ -59,10 +59,12 @@
 		<thead>
 		<tr>
 			<th scope="col">Pincode</th>
-			<th scope="col">Vaccine Center Name</th>
-			<th scope="col">Address</th>
+			<th scope="col" style="width:200px;">Vaccine Center Name</th>
+			<th scope="col" style="width:300px;">Address</th>
 			<th scope="col">Fees</th>	
 			<th scope="col">Dose Available</th>	
+			<th scope="col">Vaccine</th>	
+			<th scope="col">Age Group</th>
 			<th scope="col">Dose 1/2</th>
 			<th scope="col">District Name</th>
 			<th scope="col">Check Slot</th>
@@ -75,8 +77,8 @@
 	</div>
 	
 	<div class="timevalue">
-		<div style="float: right;"><button class="bi bi-x" style="font-size: 2rem; color: black; background-color: LimeGreen;"></button></div>
-		<table class="table table-striped" id="">
+		<div style="float: right;"><button class="bi bi-x" id="crossbtn" style="font-size: 2rem; color: black; background-color: LimeGreen;"></button></div>
+		<!-- <table class="table table-striped" id="">
 		<thead>
 		<tr>
 			<th scope="col">No</th>
@@ -87,12 +89,15 @@
 			
 		</tbody>
 	
-	</table>
+	</table> -->
+		<b>Slot Booking is Under Construction</b>
 	</div>
 
 <script type="text/javascript">
 	var jsonval={};
 			$("#tbl").hide();
+			$(".timevalue").hide();
+
 
 	$.ajax({
 		url:'https://cdn-api.co-vin.in/api/v2/admin/location/states',
@@ -127,7 +132,7 @@
 		});
 		});
 	var distcode;
-var calender11;
+	var calender11;
 	$("#select_district").on('change',function(){
 	distcode=$("#select_district").val();
 		$("#calender").on('change',function(){
@@ -139,11 +144,9 @@ var calender11;
 	$("#chk_btn").on('click',function(event){
 			event.preventDefault();
 			$("#row_id").empty();
-					// var jsdata ={pincode:distcode,date:calender11};
-					// var jsondata=JSON.stringify(jsdata);
-					// console.log(jsondata);
 					if(distcode>0 && calender11.length>0){
 			$("#tbl").show();
+			$(".timevalue").show();
 				$.ajax({
 				url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict' ,
 				type:'GET' ,
@@ -152,9 +155,16 @@ var calender11;
 				success : function (valu) {
 					console.log(valu);
 					$.each(valu['sessions'],function(k,v){
+						if(v.min_age_limit=='18'){
+						
 						$("#row_id").append(
-							"<tr><td>"+v.pincode+"</td><td>"+v.name+"</td><td>"+v.address+"</td><td>"+v.fee_type+ "->"+ v.fee+"</td><td>"+v.available_capacity +"</td><td>"+v.available_capacity_dose1+"/"+v.available_capacity_dose2 +"</td><td>"+v.district_name+"</td><td><button id='slot' value= '"+v.pincode+"'>Slot</button></td><td>"
+							"<tr><td>"+v.pincode+"</td><td>"+v.name+"</td><td>"+v.address+"</td><td>"+v.fee_type+ "->"+ v.fee+"</td><td>"+v.available_capacity+"</td><td>"+v.vaccine+"</td><td>18-44</td><td>"+v.available_capacity_dose1+"/"+v.available_capacity_dose2 +"</td><td>"+v.district_name+"</td><td><button id='slot' value= '"+v.pincode+"'>Slot</button></td><td>"
 						)
+						}else{
+							$("#row_id").append(
+							"<tr><td>"+v.pincode+"</td><td>"+v.name+"</td><td>"+v.address+"</td><td>"+v.fee_type+ "->"+ v.fee+"</td><td>"+v.available_capacity+"</td><td>"+v.vaccine+"</td><td>Avobe 44</td><td>"+v.available_capacity_dose1+"/"+v.available_capacity_dose2 +"</td><td>"+v.district_name+"</td><td><button id='slot' value= '"+v.pincode+"'>Slot</button></td><td>"
+						)
+						}
 					})
 				}
 				});
@@ -163,49 +173,13 @@ var calender11;
 				alert("Please selectr district and date!!");
 			}
 			})
-	
+	$("#crossbtn").on("click",function(){
+			$(".timevalue").hide();
+	})
 
-	// $("#chk_btn").on('click',function(){
-	// 	$.ajax({
-	// 	url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin' ,
-	// 	type:'GET' ,
-	// 	data:{'pincode':'756117','date':'23-08-2021'},
-	// 	dataType:'JSON',
-	// 	success : function (valu) {
-	// 		console.log(valu);
-			
-	// 	}
-	// 	});
-	// })
-$("#chk_btn").on('click',function(){
-	$.ajax({
-		url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin' ,
-		type:'GET' ,
-		data:{'pincode':'756117','date':'23-08-2021'},
-		dataType:'JSON',
-		success : function (valu) {
-			console.log(valu);
-			// jsonval=valu['districts'];
-			// $.each(valu['districts'],function(k,v){
-			// 	$("#row_id").append(
-			// 			"<tr scope=\"row\"> <td>" +v.district_id+"</td> <td>"+v.district_name+"</td> </tr>"
-			// 		)
-			// })
-		}
-		});
-})
-	
-	
-
-	// console.log(jsonval);
 </script>
 </body>
 
 </html>
-<!-- table data// $.each(valu['districts'],function(k,v){
-			// 	$("#row_id").append(
-			// 			"<tr scope=\"row\"> <td>" +v.district_id+"</td> <td>"+v.district_name+"</td> </tr>"
-			// 		)
-			// }) -->
 
 
