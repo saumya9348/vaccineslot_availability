@@ -50,7 +50,8 @@
 				<option>Select District</option>	
 			</select><br><br>
 			Select Date  &nbsp;  &nbsp; <input type="date" id="calender"><br><br>
-			&nbsp;  &nbsp; &nbsp; <button class="btn btn-primary" id="chk_btn">Check</button>
+			&nbsp;  &nbsp; &nbsp; <button class="btn btn-primary" id="chk_btn">Check</button><br><br>
+			<span>Check Through Pincode</span> <a href="check_vaccinne_through_pin.html">Click Here</a>
 		</form>
 	</div>
 	<div id="">
@@ -94,6 +95,9 @@
 	</div>
 
 <script type="text/javascript">
+	$(document).ready(function(){
+		
+
 	var jsonval={};
 			$("#tbl").hide();
 			$(".timevalue").hide();
@@ -132,7 +136,7 @@
 		});
 		});
 	var distcode;
-	var calender11;
+var calender11;
 	$("#select_district").on('change',function(){
 	distcode=$("#select_district").val();
 		$("#calender").on('change',function(){
@@ -144,6 +148,9 @@
 	$("#chk_btn").on('click',function(event){
 			event.preventDefault();
 			$("#row_id").empty();
+					// var jsdata ={pincode:distcode,date:calender11};
+					// var jsondata=JSON.stringify(jsdata);
+					// console.log(jsondata);
 					if(distcode>0 && calender11.length>0){
 			$("#tbl").show();
 			$(".timevalue").show();
@@ -176,10 +183,48 @@
 	$("#crossbtn").on("click",function(){
 			$(".timevalue").hide();
 	})
+// if(v.min_age_limit=='18'){console.log('hiiiiiii')}else{console.log('bii')}
+	// $("#chk_btn").on('click',function(){
+	// 	$.ajax({
+	// 	url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin' ,
+	// 	type:'GET' ,
+	// 	data:{'pincode':'756117','date':'23-08-2021'},
+	// 	dataType:'JSON',
+	// 	success : function (valu) {
+	// 		console.log(valu);
+			
+	// 	}
+	// 	});
+	// })
+$("#chk_btn").on('click',function(){
+	$.ajax({
+		url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin' ,
+		type:'GET' ,
+		data:{'pincode':'756117','date':'23-08-2021'},
+		dataType:'JSON',
+		success : function (valu) {
+			console.log(valu);
+			// jsonval=valu['districts'];
+			// $.each(valu['districts'],function(k,v){
+			// 	$("#row_id").append(
+			// 			"<tr scope=\"row\"> <td>" +v.district_id+"</td> <td>"+v.district_name+"</td> </tr>"
+			// 		)
+			// })
+		}
+		});
+})
+	
+		})
 
+	// console.log(jsonval);
 </script>
 </body>
 
 </html>
+<!-- table data// $.each(valu['districts'],function(k,v){
+			// 	$("#row_id").append(
+			// 			"<tr scope=\"row\"> <td>" +v.district_id+"</td> <td>"+v.district_name+"</td> </tr>"
+			// 		)
+			// }) -->
 
 
