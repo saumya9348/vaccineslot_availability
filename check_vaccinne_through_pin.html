@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<!-- CSS only -->
+	<style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+		#tbl{
+			position: relative;
+			width: 100%;
+			float: left;
+			/*display: none;*/
+		}
+		.tbl{
+			width: 400px;
+		}
+		.timevalue{
+			height: auto;
+			width: 400px;
+			background-color: red;
+			position: absolute;
+			margin: 10% 35%;
+			/*display: none;*/
+		}
+		#formid{
+			padding-left:40%;
+			padding-top:20px;
+			padding-bottom:20px;
+			background-color: rgb(230, 255, 255);
+		}
+		#form_tbl{
+			width: 400px;
+			height: 150px;
+		}
+		#chk_btn{
+			margin-left: 120px;
+		}
+		.timevalue{
+			height: auto;
+			width: 400px;
+			background-color: red;
+			position: absolute;
+			margin: 10% 35%;
+			/*display: none;*/
+		}
+	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+	<div><img src="CoWIN.png" style="width: 100%;height: 500px;"></div>
+	<div id="formid">
+		<form >
+			<table id="form_tbl">
+				<tr>
+					<td>
+						Enter Your Pincode
+					</td>
+					<td>
+						<input type="" placeholder="eg 789899" name="" id="pincode" required>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Select Date
+					</td>
+					<td>
+						<input type="date" id="calender" required>
+					</td>
+				</tr>
+			</table>
+			<button class="btn btn-primary" id="chk_btn">Check</button><br><br>
+			<span>Check Through District</span> <a href="index.html">Click Here</a>
+		</form>
+	</div>
+			
+	<div id="tblshow" style="position: relative;float: left;width: 100%;">
+		<table class="table table-striped" style="position: relative;">
+  <thead>
+    <tr>
+      <th scope="col">Sl no</th>
+      <th scope="col">Pincode</th>
+      <th scope="col">Center</th>
+      <th scope="col">Address</th>
+      <th scope="col">Vaccine</th>
+      <th scope="col">Block</th>
+      <th scope="col">Vacine Available</th>
+      <th scope="col">Dose 1/2</th>
+      <th scope="col">Fess</th>
+      <th scope="col">Age</th>
+    </tr>
+  </thead>
+  <tbody id="row_id">
+
+  </tbody>
+</table>
+	</div>
+	<div class="timevalue">
+		<div style="float: right;"><button class="bi bi-x" id="crossbtn" style="font-size: 2rem; color: black; background-color: LimeGreen;"></button></div>
+		<b>Slot Booking is Under Construction</b>
+	</div>
+	<script type="text/javascript">
+		$("#tblshow").hide();
+		$(".timevalue").hide();
+		document.getElementById('pincode').value;
+		$(document).ready(function(){
+
+		$("#chk_btn").on("click",function(e){
+			e.preventDefault();
+		var pin = $("#pincode").val().trim();
+		var calen=$("#calender").val();
+		var datesplit=calen.split("-");
+		var date1=datesplit[2]+"-"+datesplit[1]+"-"+datesplit[0];
+		// console.log(calen.length);
+		var aa=/^[0-9]*$/;
+		if(aa.test(pin)){
+		if (pin=='' || pin==null || calen.length <=0) {
+			alert("Pincode and date is mandetory !!")
+		}else{
+			$("#tblshow").show();
+			$("#row_id").empty();
+			var slno=0;
+		$(".timevalue").show();
+			$.ajax({
+				url:'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin',
+				data:{pincode:pin,date:date1},
+				dataType:"JSON",
+				success:function(data){
+					console.log(data['sessions']);
+					$.each(data['sessions'],function(k,v){
+						slno++;
+						if(v.min_age_limit=='18'){
+						$("#row_id").append(
+							"<tr><td>"+ slno+"</td><td>"+v.pincode+"</td><td>"+v.name+"</td><td>"+v.address+"</td><td>"+v.vaccine+"</td><td>"+v.block_name+"</td><td>"+v.available_capacity+"</td><td>"+v.available_capacity_dose1+'/'+v.available_capacity_dose2+"</td><td>"+(v.fee>0?'Paid-'+v.fee:'Free')+"</td><td> 18-44</td><td>"
+							)
+					}else{
+						$("#row_id").append(
+							"<tr><td>"+ slno+"</td><td>"+v.pincode+"</td><td>"+v.name+"</td><td>"+v.address+"</td><td>"+v.vaccine+"</td><td>"+v.block_name+"</td><td>"+v.available_capacity+"</td><td>"+v.available_capacity_dose1+'/'+v.available_capacity_dose2+"</td><td>"+ (v.fee>0?'Paid-'+v.fee:'Free')+"</td><td> Above 44</td><td>"
+							)
+					}
+					})
+				}
+
+			})
+		}
+		}else{
+			alert("Pincode Not In Correct Format!!")
+		}
+		})
+		$("#crossbtn").on("click",function(){
+			$(".timevalue").hide();
+	})
+		})
+	</script>
+</body>
+</html>
